@@ -1,0 +1,121 @@
+drop database pyadventure;
+show databases;
+create database pyadventure;
+use pyadventure;
+
+
+create table user(
+uid int4 auto_increment,
+name varchar(20) not null,
+emailid varchar(50) not null,
+dateofbirth date not null,
+contact_no int8 not null,
+password varchar(20) not null,
+sec_qn varchar(40) not null,
+sec_ans varchar(10) not null,
+role varchar(5) default 'User',
+constraint user_uid_pk primary key(uid),
+constraint user_emailid_uq unique(emailid),
+constraint user_password_ck check(length(password) between 6 and 10),
+constraint user_contacct_no_ck check(length(contact_no)=10),
+constraint user_sec_an_ck check(length(password) between 3 and 10)
+);
+
+
+create table adventure1(
+aid int4,
+name varchar(50) not null,
+description varchar(500) not null,
+constraint a1_aid_pk primary key(aid)
+);
+
+
+create table adventure2(
+aid int4,
+place varchar(50) not null,
+price int4 not null,
+no_of_slots int4 not null,
+constraint a2_aid_pl_pk primary key(aid,place),
+constraint a2_aid_fk foreign key (aid) references adventure1(aid)
+);
+
+
+insert into Adventure1 values(1,'Sky diving','Skydiving, also called parachuting, is a sport in which athletes jump out of an airplane at a certain altitude and perform acrobatic movements in free fall. Then they open their parachutes to slow down and return safely to Earth.');
+insert into Adventure1 values(2,'River Rafting','River Rafting is a recreational outdoor activity which use an inflatable raft to navigate a river or other body of water. This is often done on whitewater or different degrees of rough water.');
+insert into Adventure1 values(3,'Bungee Jumping','Bungee jumping is an extreme sport in which people jump from higher ground such as a bridge with an elastic rope tied to their ankles to stop them from hitting the ground. The rope is designed to stretch, not break. When the rope has stretched all the way, the jumper bounces back up.');
+insert into Adventure1 values(4,'Scuba diving','Scuba diving is a mode of underwater diving where the diver uses a self-contained underwater breathing apparatus (scuba) which is completely independent of surface supply, to breathe underwater.');
+
+
+insert into Adventure2 values(1,'Andaman and Nicobar Islands',14000,10);
+insert into Adventure2 values(2,'Andaman and Nicobar Islands',1500,10);
+insert into Adventure2 values(3,'Andaman and Nicobar Islands',2000,10);
+insert into Adventure2 values(4,'Andaman and Nicobar Islands',3500,10);
+insert into Adventure2 values(1,'Goa',12500,10);
+insert into Adventure2 values(3,'Goa',2000,10);
+insert into Adventure2 values(4,'Goa',3000,10);
+insert into Adventure2 values(1,'Delhi',13000,10);
+insert into Adventure2 values(2,'Delhi',1500,10);
+insert into Adventure2 values(3,'Delhi',2250,10);
+insert into Adventure2 values(1,'Mysore',12000,10);
+insert into Adventure2 values(2,'Mysore',1500,10);
+
+
+create table booking(
+bid int4 auto_increment,
+uid int4 not null,
+aid int4 not null,
+name varchar(50) not null,
+place varchar(50) not null,
+date date not null,
+amount_per_person int4 not null,
+no_of_slots int4 not null,
+total_amount int4 not null,
+constraint booking_bid_pk primary key(bid),
+constraint booking_aid_fk foreign key (aid) references adventure1(aid),
+constraint booking_uid_fk foreign key (uid) references user(uid)
+);
+
+
+create table preplan(
+pid int4 auto_increment,
+uid int4 not null,
+aid int4 not null,
+name varchar(50) not null,
+place varchar(50) not null,
+date date not null,
+amount_per_person int4 not null,
+no_of_slots int4 not null,
+total_amount int4 not null,
+constraint preplan_pid_pk primary key(pid),
+constraint preplan_aid_fk foreign key (aid) references adventure1(aid),
+constraint preplan_uid_fk foreign key (uid) references user(uid)
+);
+
+
+create table people_information(
+uid int4 not null,
+bid int4 not null,
+name varchar(50) not null,
+gender varchar(6) not null CHECK (gendar IN ('M','F','O')),
+age int4 not null,
+constraint people_info_uid_fk foreign key (uid) references user(uid),
+constraint people_info_bid_fk foreign key (bid) references booking(bid)
+);
+
+
+create table card(
+uid int4 not null,
+card_no int8 not null,
+valid_till varchar(7) not null,
+constraint card_uid_fk foreign key (uid) references user(uid)
+);
+
+
+show tables;
+select * from user;
+select * from adventure1;
+select * from adventure2;
+select * from booking;
+select * from preplan;
+select * from people_information;
+select * from card;
